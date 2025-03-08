@@ -44,16 +44,17 @@ public class HorseClass {
     public int getStepCountFromThisCell(Map<Coordinate, CellValue> board, int stepNum, Queue<Coordinate> currCoordinates, Coordinate endCoord, int boardSize) {
         CellValue currCellValue;
         Coordinate coor;
-        for (int i = 0; i < currCoordinates.size(); i++) {
+        int currCoordinatesSize=currCoordinates.size();
+        for (int i = 0; i < currCoordinatesSize; i++) {
             coor = currCoordinates.poll();
             currCellValue = board.get(coor);
-            if (currCellValue.equals(endCoord)) {
-                return stepNum;
+            if (currCellValue.getCellSign()==FINISH) {
+                return stepNum-1;
             }
-            if (currCellValue.getHorseStepped() == stepNum) {
+            if (currCellValue.getHorseStepped() == stepNum-1) {
                 currCoordinates.addAll(fillBoardByThisStepsForHorse(board, coor, boardSize, stepNum));
             }
-            if  (currCellValue.getKingStepped() == stepNum) {
+            if  (currCellValue.getKingStepped() == stepNum-1) {
                 currCoordinates.addAll(fillBoardByThisStepsForKing(board, coor, boardSize, stepNum));
             }
         }
@@ -95,22 +96,23 @@ public class HorseClass {
     private boolean isStepWasBefore(Map<Coordinate, CellValue> board, Coordinate coordinate, boolean isKingNow){
         CellValue val=board.get(coordinate);
         if(isKingNow){
-            if(val.getCellSign()==TO_HORSE || val.getCellSign()==START){
-                return val.getHorseStepped()>0;
+            if(val.getCellSign()==TO_HORSE){
+                return val.getHorseStepped()>=0;
             }
             return val.getKingStepped()>0;
         } else {
             if(val.getCellSign()==TO_KING){
-                return val.getHorseStepped()>0;
+                return val.getKingStepped()>0;
             }
-            return val.getHorseStepped()>0;
+            return val.getHorseStepped()>=0;
         }
     }
 
     private void fillKingCoordinateValue(Map<Coordinate, CellValue> board, int currentStep, Coordinate coordinate){
         CellValue val=board.get(coordinate);
-        if(val.getCellSign()==TO_HORSE || val.getCellSign()==START){
-            throw new RuntimeException("Can't run this method for horse");
+        if(val.getCellSign()==TO_HORSE){
+            fillHorseCoordinateValue(board, currentStep, coordinate);
+            return;
         }
         if(val.getKingStepped()>0){
             throw new RuntimeException("This cell was already stepped");
@@ -121,9 +123,10 @@ public class HorseClass {
     private void fillHorseCoordinateValue(Map<Coordinate, CellValue> board, int currentStep, Coordinate coordinate){
         CellValue val=board.get(coordinate);
         if(val.getCellSign()==TO_KING){
-            throw new RuntimeException("Can't run this method for horse");
+           fillKingCoordinateValue(board, currentStep, coordinate);
+           return;
         }
-        if(val.getHorseStepped()>0){
+        if(val.getHorseStepped()>=0){
             throw new RuntimeException("This cell was already stepped");
         }
         val.setHorseStepped(currentStep);
