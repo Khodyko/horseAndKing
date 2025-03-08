@@ -20,6 +20,7 @@ public class HorseClass {
         HashMap<Coordinate, CellValue> board = new HashMap<>();
         CellValue currCellValue;
         Coordinate currCoordinate;
+        //Заполняем hashMap
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 currCoordinate = new Coordinate(i, j);
@@ -41,6 +42,17 @@ public class HorseClass {
         return getStepCountFromThisCell(board, 1, startCoord, endCoord, n);
     }
 
+    /**
+     * Ищем по шагам от данной координаты,
+     * смотрим все возможные варианты ходов текущей фигурой
+     * Если в какую-то координату этой фигурой мы уже ходили, то её не рассматриваем как вариант.
+     *
+     * @param board информация о координатах и какими фигурами на каком шаге мы туда ступали
+     * @param stepNum номер следующего шага поиска
+     * @param currCoordinates содержит координаты, от которых мы делаем шаг на данном этапе
+     * @param endCoord координата окончания (чтобы не искать каждый раз)
+     * @param boardSize размер доски
+     */
     public int getStepCountFromThisCell(Map<Coordinate, CellValue> board, int stepNum, Queue<Coordinate> currCoordinates, Coordinate endCoord, int boardSize) {
         CellValue currCellValue;
         Coordinate coor;
@@ -64,7 +76,16 @@ public class HorseClass {
         return getStepCountFromThisCell(board, stepNum + 1, currCoordinates, endCoord, boardSize);
     }
 
-
+    /**
+     * Заполняет занчения доски информацией,
+     * о том какой фигурой и в какие координаты на данном шаге мы можем ступить,
+     * если шагаем королем
+     *
+     * @param board доска
+     * @param currCoordinate текущая координата
+     * @param boardSize размер доски
+     * @param currStepNum номер текущего шага
+     */
     private List<Coordinate> fillBoardByThisStepsForKing(Map<Coordinate, CellValue> board, Coordinate currCoordinate,
                                                          final int boardSize, int currStepNum) {
         List<Coordinate> possibleSteps= getPossibleCoordinatesForKing(currCoordinate);
@@ -79,6 +100,16 @@ public class HorseClass {
         return result;
     }
 
+    /**
+     * Заполняет занчения доски информацией,
+     * о том какой фигурой и в какие координаты на данном шаге мы можем ступить,
+     * если шагаем конем
+     *
+     * @param board доска
+     * @param currCoordinate текущая координата
+     * @param boardSize размер доски
+     * @param currStepNum номер текущего шага
+     */
     private List<Coordinate> fillBoardByThisStepsForHorse(Map<Coordinate, CellValue> board, Coordinate currCoordinate,
                                                           int boardSize, int currStepNum) {
         List<Coordinate> possibleSteps= getPossibleCoordinatesForHorse(currCoordinate);
@@ -93,6 +124,15 @@ public class HorseClass {
         return result;
     }
 
+    /**
+     * Проверяет возможен ли шаг на данную координату данной фигурой
+     * с учетом знаков на доске
+     *
+     * @param board
+     * @param coordinate
+     * @param isKingNow
+     * @return
+     */
     private boolean isStepWasBefore(Map<Coordinate, CellValue> board, Coordinate coordinate, boolean isKingNow){
         CellValue val=board.get(coordinate);
         if(isKingNow){
@@ -108,6 +148,14 @@ public class HorseClass {
         }
     }
 
+    /**
+     * Заполняет значение board для данной координаты
+     * при фигуре король
+     *
+     * @param board
+     * @param currentStep
+     * @param coordinate
+     */
     private void fillKingCoordinateValue(Map<Coordinate, CellValue> board, int currentStep, Coordinate coordinate){
         CellValue val=board.get(coordinate);
         if(val.getCellSign()==TO_HORSE){
@@ -120,6 +168,14 @@ public class HorseClass {
         val.setKingStepped(currentStep);
     }
 
+    /**
+     * Заполняет значение board для данной координаты
+     * при фигуре конь
+     *
+     * @param board
+     * @param currentStep
+     * @param coordinate
+     */
     private void fillHorseCoordinateValue(Map<Coordinate, CellValue> board, int currentStep, Coordinate coordinate){
         CellValue val=board.get(coordinate);
         if(val.getCellSign()==TO_KING){
@@ -132,6 +188,12 @@ public class HorseClass {
         val.setHorseStepped(currentStep);
     }
 
+    /**
+     * Возвращает все возможные шаги для фигуры король
+     *
+     * @param coordinate
+     * @return
+     */
     private List<Coordinate> getPossibleCoordinatesForKing(Coordinate coordinate) {
         List<Coordinate> result;
         Coordinate up = new Coordinate(coordinate.getRow() - 1, coordinate.getColumn());
@@ -147,6 +209,11 @@ public class HorseClass {
         return result;
     }
 
+    /**
+     * Возвращает все возможные шаги для фигуры конь
+     * @param coordinate
+     * @return
+     */
     private List<Coordinate> getPossibleCoordinatesForHorse(Coordinate coordinate) {
         List<Coordinate> result;
         Coordinate twoUpOneLeft = new Coordinate(coordinate.getRow() - 2, coordinate.getColumn() - 1);
@@ -163,6 +230,13 @@ public class HorseClass {
         return result;
     }
 
+    /**
+     * Проверяет попадает ли координата на доску переданного размера.
+     *
+     * @param coordinate
+     * @param boardSize
+     * @return
+     */
     private boolean isCoordinateOnBoard(Coordinate coordinate, int boardSize) {
         return  coordinate.getRow() >= 0 &&
                 coordinate.getColumn() >= 0 &&
