@@ -77,7 +77,7 @@ public class HorseClass {
     }
 
     /**
-     * Заполняет занчения доски информацией,
+     * Заполняет значения доски информацией,
      * о том какой фигурой и в какие координаты на данном шаге мы можем ступить,
      * если шагаем королем
      *
@@ -85,6 +85,8 @@ public class HorseClass {
      * @param currCoordinate текущая координата
      * @param boardSize размер доски
      * @param currStepNum номер текущего шага
+     *
+     * return координаты, которые были заполнены на этом шагу
      */
     private List<Coordinate> fillBoardByThisStepsForKing(Map<Coordinate, CellValue> board, Coordinate currCoordinate,
                                                          final int boardSize, int currStepNum) {
@@ -101,7 +103,7 @@ public class HorseClass {
     }
 
     /**
-     * Заполняет занчения доски информацией,
+     * Заполняет значения доски информацией,
      * о том какой фигурой и в какие координаты на данном шаге мы можем ступить,
      * если шагаем конем
      *
@@ -109,6 +111,8 @@ public class HorseClass {
      * @param currCoordinate текущая координата
      * @param boardSize размер доски
      * @param currStepNum номер текущего шага
+     *
+     * return координаты, которые были заполнены на этом шагу
      */
     private List<Coordinate> fillBoardByThisStepsForHorse(Map<Coordinate, CellValue> board, Coordinate currCoordinate,
                                                           int boardSize, int currStepNum) {
