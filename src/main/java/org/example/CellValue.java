@@ -1,9 +1,9 @@
 package org.example;
 
 public class CellValue {
-    char cellSign;
-    int horseStepped;
-    int kingStepped;
+    private char cellSign;
+    private int horseStepped;
+    private int kingStepped;
 
     public char getCellSign() {
         return cellSign;
